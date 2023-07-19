@@ -208,7 +208,7 @@ You need to implement the RSA data encryption algorithm:
 - In encryption mode, the program takes the absolute path to the source file and the file with the public key as input. The program outputs a new encrypted file in the format `<source_file_name>_encoded`. The location of this file is set while the program is running
 - In decryption mode, the program takes as input the absolute path to the source file and the files with public and private keys. The program outputs a new decrypted file in the format `<source_file_name>_decoded`. The location of this file is set while the program is running
 
-##Part 4. Bonus. DES symmetric encryption algorithm
+## Part 4. Bonus. DES symmetric encryption algorithm
 
 You need to implement the DES data encryption algorithm:
 - The program must be developed in C++ language of C++17 standard
