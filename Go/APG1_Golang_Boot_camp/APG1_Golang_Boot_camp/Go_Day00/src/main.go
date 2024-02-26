@@ -7,11 +7,12 @@ import (
 )
 
 type statNums struct {
-	length int
-	nums   []int
+	length, mode int
+	median, mean float32
+	nums         []int
 }
 
-func (s *statNums) InitStruct() {
+func (s *statNums) initStruct() {
 	num := 0
 	for {
 		_, err := fmt.Scan(&num)
@@ -26,23 +27,23 @@ func (s *statNums) InitStruct() {
 	s.length = len(s.nums)
 }
 
-func (s *statNums) getMean() float32 {
+func (s *statNums) calcMean() {
 	sum := 0
 	for _, num := range s.nums {
 		sum += num
 	}
-	return float32(sum) / float32(s.length)
+	s.mean = float32(sum) / float32(s.length)
 }
 
-func (s *statNums) getMedian() float32 {
+func (s *statNums) calcMedian() {
 	if s.length%2 == 1 {
-		return float32(s.nums[s.length/2])
+		s.median = float32(s.nums[s.length/2])
 	} else {
-		return (float32(s.nums[s.length/2]) + float32(s.nums[s.length/2+1])) / 2
+		s.median = (float32(s.nums[s.length/2]) + float32(s.nums[s.length/2+1])) / 2
 	}
 }
 
-func (s *statNums) getMode() int {
+func (s *statNums) calcMode() {
 	cnt := make(map[int]int)
 	for _, num := range s.nums {
 		cnt[num] += 1
@@ -56,16 +57,23 @@ func (s *statNums) getMode() int {
 			maxFreq = freq
 		}
 	}
-	return mode
+	s.mode = mode
+}
+
+func (s *statNums) calculateStats() {
+	s.calcMode()
+	s.calcMedian()
+	s.calcMean()
 }
 
 func main() {
 	var stat statNums
 
-	stat.InitStruct()
+	stat.initStruct()
+	stat.calculateStats()
 
-	fmt.Println("Mean:", stat.getMean())
-	fmt.Println("Median:", stat.getMedian())
-	fmt.Println("Mode:", stat.getMode())
+	fmt.Println("Mean:", stat.mean)
+	fmt.Println("Median:", stat.median)
+	fmt.Println("Mode:", stat.mode)
 
 }
