@@ -9,7 +9,7 @@ import (
 func main() {
 	var nums []int
 	var num, mode int
-	var median float32
+	var median, mean float32
 
 	for {
 		_, err := fmt.Scan(&num)
@@ -18,7 +18,6 @@ func main() {
 		}
 		nums = append(nums, num)
 	}
-	fmt.Println(nums)
 	sort.Slice(nums, func(i, j int) bool {
 		return nums[i] < nums[j]
 	})
@@ -31,7 +30,7 @@ func main() {
 		cnt[num] += 1
 		sum += num
 	}
-	fmt.Printf("Mean: %f\n", float32(sum)/float32(l))
+	mean = float32(sum) / float32(l)
 
 	if l%2 == 1 {
 		median = float32(nums[l/2])
@@ -47,6 +46,8 @@ func main() {
 			maxFreq = freq
 		}
 	}
+
+	fmt.Printf("Mean: %f\n", mean)
 	fmt.Printf("Median: %f\n", median)
 	fmt.Printf("Mode %d\n", mode)
 
