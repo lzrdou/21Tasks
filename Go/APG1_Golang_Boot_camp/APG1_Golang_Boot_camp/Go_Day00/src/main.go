@@ -3,13 +3,16 @@ package main
 import (
 	"fmt"
 	"io"
+	"math"
+	"os"
+	"slices"
 	"sort"
 )
 
 type statNums struct {
-	length, mode int
-	median, mean float32
-	nums         []int
+	length, mode     int
+	median, mean, sd float64
+	nums             []int
 }
 
 func (s *statNums) initStruct() {
@@ -32,14 +35,14 @@ func (s *statNums) calcMean() {
 	for _, num := range s.nums {
 		sum += num
 	}
-	s.mean = float32(sum) / float32(s.length)
+	s.mean = float64(sum) / float64(s.length)
 }
 
 func (s *statNums) calcMedian() {
 	if s.length%2 == 1 {
-		s.median = float32(s.nums[s.length/2])
+		s.median = float64(s.nums[s.length/2])
 	} else {
-		s.median = (float32(s.nums[s.length/2]) + float32(s.nums[s.length/2+1])) / 2
+		s.median = (float64(s.nums[s.length/2]) + float64(s.nums[s.length/2+1])) / 2
 	}
 }
 
@@ -60,20 +63,40 @@ func (s *statNums) calcMode() {
 	s.mode = mode
 }
 
+func (s *statNums) calcSD() {
+	for _, num := range s.nums {
+		s.sd += math.Pow(float64(num)-s.mean, 2)
+	}
+	s.sd = math.Sqrt(s.sd / float64(s.length))
+}
+
 func (s *statNums) calculateStats() {
 	s.calcMode()
 	s.calcMedian()
 	s.calcMean()
+	s.calcSD()
 }
 
 func main() {
 	var stat statNums
+	args := os.Args
 
 	stat.initStruct()
 	stat.calculateStats()
 
-	fmt.Println("Mean:", stat.mean)
-	fmt.Println("Median:", stat.median)
-	fmt.Println("Mode:", stat.mode)
+	if slices.Contains(args, "--mean") {
+		fmt.Println("Mean:", stat.mean)
+	} else if slices.Contains(args, "--median") {
+		fmt.Println("Median:", stat.median)
+	} else if slices.Contains(args, "--mode") {
+		fmt.Println("Mode:", stat.mode)
+	} else if slices.Contains(args, "--sd") {
+		fmt.Printf("SD: %.2f\n", stat.sd)
+	} else if len(args) == 1 {
+		fmt.Println("Mean:", stat.mean)
+		fmt.Println("Median:", stat.median)
+		fmt.Println("Mode:", stat.mode)
+		fmt.Printf("SD: %.2f\n", stat.sd)
+	}
 
 }
