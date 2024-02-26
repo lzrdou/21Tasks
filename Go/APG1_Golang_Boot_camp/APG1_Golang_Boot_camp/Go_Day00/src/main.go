@@ -79,23 +79,18 @@ func (s *statNums) calculateStats() {
 
 func main() {
 	var stat statNums
-	args := os.Args
+	args, argsNum := os.Args, len(os.Args)
 
 	stat.initStruct()
 	stat.calculateStats()
 
-	if slices.Contains(args, "--mean") {
+	if slices.Contains(args, "--mean") || argsNum == 1 {
 		fmt.Println("Mean:", stat.mean)
-	} else if slices.Contains(args, "--median") {
+	} else if slices.Contains(args, "--median") || argsNum == 1 {
 		fmt.Println("Median:", stat.median)
-	} else if slices.Contains(args, "--mode") {
+	} else if slices.Contains(args, "--mode") || argsNum == 1 {
 		fmt.Println("Mode:", stat.mode)
-	} else if slices.Contains(args, "--sd") {
-		fmt.Printf("SD: %.2f\n", stat.sd)
-	} else if len(args) == 1 {
-		fmt.Println("Mean:", stat.mean)
-		fmt.Println("Median:", stat.median)
-		fmt.Println("Mode:", stat.mode)
+	} else if slices.Contains(args, "--sd") || argsNum == 1 {
 		fmt.Printf("SD: %.2f\n", stat.sd)
 	}
 
