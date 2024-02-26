@@ -6,49 +6,66 @@ import (
 	"sort"
 )
 
-func main() {
-	var nums []int
-	var num, mode int
-	var median, mean float32
+type statNums struct {
+	length int
+	nums   []int
+}
 
+func (s *statNums) InitStruct() {
+	num := 0
 	for {
 		_, err := fmt.Scan(&num)
 		if err == io.EOF {
 			break
 		}
-		nums = append(nums, num)
+		s.nums = append(s.nums, num)
 	}
-	sort.Slice(nums, func(i, j int) bool {
-		return nums[i] < nums[j]
+	sort.Slice(s.nums, func(i, j int) bool {
+		return s.nums[i] < s.nums[j]
 	})
+	s.length = len(s.nums)
+}
 
-	l := len(nums)
-
-	cnt := make(map[int]int)
+func (s *statNums) getMean() float32 {
 	sum := 0
-	for _, num := range nums {
-		cnt[num] += 1
+	for _, num := range s.nums {
 		sum += num
 	}
-	mean = float32(sum) / float32(l)
+	return float32(sum) / float32(s.length)
+}
 
-	if l%2 == 1 {
-		median = float32(nums[l/2])
+func (s *statNums) getMedian() float32 {
+	if s.length%2 == 1 {
+		return float32(s.nums[s.length/2])
 	} else {
-		median = (float32(nums[l/2]) + float32(nums[l/2+1])) / 2
+		return (float32(s.nums[s.length/2]) + float32(s.nums[s.length/2+1])) / 2
 	}
+}
 
+func (s *statNums) getMode() int {
+	cnt := make(map[int]int)
+	for _, num := range s.nums {
+		cnt[num] += 1
+	}
+	mode := 0
 	maxFreq := 0
-	for _, key := range nums {
+	for _, key := range s.nums {
 		freq := cnt[key]
 		if freq > maxFreq {
 			mode = key
 			maxFreq = freq
 		}
 	}
+	return mode
+}
 
-	fmt.Printf("Mean: %f\n", mean)
-	fmt.Printf("Median: %f\n", median)
-	fmt.Printf("Mode %d\n", mode)
+func main() {
+	var stat statNums
+
+	stat.InitStruct()
+	fmt.Println(stat.nums)
+	fmt.Println("Mean:", stat.getMean())
+	fmt.Println("Median:", stat.getMedian())
+	fmt.Println("Mode:", stat.getMode())
 
 }
