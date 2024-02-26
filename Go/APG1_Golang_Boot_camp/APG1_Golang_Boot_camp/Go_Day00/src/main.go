@@ -63,7 +63,7 @@ func main() {
 	var stat statNums
 
 	stat.InitStruct()
-	fmt.Println(stat.nums)
+
 	fmt.Println("Mean:", stat.getMean())
 	fmt.Println("Median:", stat.getMedian())
 	fmt.Println("Mode:", stat.getMode())
